@@ -1,13 +1,12 @@
-// Copyright 2013-2014 the openage authors. See copying.md for legal info.
+// Copyright 2013-2015 the openage authors. See copying.md for legal info.
 
 #ifndef OPENAGE_UTIL_FILE_H_
 #define OPENAGE_UTIL_FILE_H_
 
-#include <stdlib.h>
-#include <string.h>
+#include <cinttypes>
+#include <cstring>
 #include <string>
 #include <vector>
-#include <cinttypes>
 
 #include "error.h"
 #include "dir.h"
@@ -16,19 +15,23 @@
 namespace openage {
 namespace util {
 
-ssize_t file_size(const std::string &filename);
-ssize_t file_size(Dir basedir, const std::string &fname);
+/** Returns whether the given file exists. */
+bool file_exists(const char *filename);
 
-ssize_t read_whole_file(char **result, const char *filename);
-ssize_t read_whole_file(char **result, const std::string &filename);
+/** Returns whether the given file exists. */
+bool file_exists(const std::string &filename);
 
-/**
- * get the lines of a file.
- *
- * returns vector of strings, each entry is one line in the file.
- */
-std::vector<std::string> file_get_lines(const std::string &file_name);
+/** Returns the whole content of the given file. */
+std::vector<char> read_whole_file(const char *filename);
 
+/** Returns the whole content of the given file. */
+std::vector<char> read_whole_file(const std::string &filename);
+
+/** Returns all lines from the given file. */
+std::vector<std::string> read_lines_from_file(const char *filename);
+
+/** Returns all lines from the given file. */
+std::vector<std::string> read_lines_from_file(const std::string &filename);
 
 /**
  * read a single csv file.
@@ -36,7 +39,7 @@ std::vector<std::string> file_get_lines(const std::string &file_name);
  */
 template <class lineformat>
 std::vector<lineformat> read_csv_file(const std::string &fname) {
-	std::vector<std::string> lines = file_get_lines(fname);
+	std::vector<std::string> lines = read_lines_from_file(fname);
 
 	size_t line_count = 0;
 
@@ -81,7 +84,7 @@ std::vector<lineformat> recurse_data_files(Dir basedir, const std::string &fname
 	std::vector<lineformat> result;
 	std::string merged_filename = basedir.join(fname);
 
-	if (0 < file_size(merged_filename)) {
+	if (file_exists(merged_filename)) {
 		result = read_csv_file<lineformat>(merged_filename);
 
 		//the new basedir is the old basedir

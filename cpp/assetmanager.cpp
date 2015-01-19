@@ -28,7 +28,7 @@ AssetManager::AssetManager(util::Dir *root)
 }
 
 bool AssetManager::can_load(const std::string &name) const {
-	return util::file_size(this->root->join(name)) > 0;
+	return util::file_exists(this->root->join(name));
 }
 
 std::shared_ptr<Texture> AssetManager::load_texture(const std::string &name) {

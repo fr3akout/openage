@@ -1,7 +1,9 @@
-// Copyright 2013-2014 the openage authors. See copying.md for legal info.
+// Copyright 2013-2015 the openage authors. See copying.md for legal info.
 
 #ifndef OPENAGE_SHADER_SHADER_H_
 #define OPENAGE_SHADER_SHADER_H_
+
+#include <vector>
 
 #include "../crossplatform/opengl.h"
 
@@ -12,7 +14,7 @@ const char *type_to_string(GLenum type);
 
 class Shader {
 public:
-	Shader(GLenum type, const char *source);
+	Shader(GLenum type, const std::vector<char> &source);
 	~Shader();
 
 	GLuint id;

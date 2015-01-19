@@ -147,31 +147,20 @@ GameMain::GameMain(Engine *engine)
 	// shader initialisation
 	// read shader source codes and create shader objects for wrapping them.
 
-	char *texture_vert_code;
-	util::read_whole_file(&texture_vert_code, data_dir->join("shaders/maptexture.vert.glsl"));
+	auto texture_vert_code = util::read_whole_file(data_dir->join("shaders/maptexture.vert.glsl"));
 	auto plaintexture_vert = new shader::Shader(GL_VERTEX_SHADER, texture_vert_code);
-	delete[] texture_vert_code;
 
-	char *texture_frag_code;
-	util::read_whole_file(&texture_frag_code, data_dir->join("shaders/maptexture.frag.glsl"));
+	auto texture_frag_code = util::read_whole_file(data_dir->join("shaders/maptexture.frag.glsl"));
 	auto plaintexture_frag = new shader::Shader(GL_FRAGMENT_SHADER, texture_frag_code);
-	delete[] texture_frag_code;
 
-	char *teamcolor_frag_code;
-	util::read_whole_file(&teamcolor_frag_code, data_dir->join("shaders/teamcolors.frag.glsl"));
+	auto teamcolor_frag_code = util::read_whole_file(data_dir->join("shaders/teamcolors.frag.glsl"));
 	auto teamcolor_frag = new shader::Shader(GL_FRAGMENT_SHADER, teamcolor_frag_code);
-	delete[] teamcolor_frag_code;
 
-	char *alphamask_vert_code;
-	util::read_whole_file(&alphamask_vert_code, data_dir->join("shaders/alphamask.vert.glsl"));
+	auto alphamask_vert_code = util::read_whole_file(data_dir->join("shaders/alphamask.vert.glsl"));
 	auto alphamask_vert = new shader::Shader(GL_VERTEX_SHADER, alphamask_vert_code);
-	delete[] alphamask_vert_code;
 
-	char *alphamask_frag_code;
-	util::read_whole_file(&alphamask_frag_code, data_dir->join("shaders/alphamask.frag.glsl"));
+	auto alphamask_frag_code = util::read_whole_file(data_dir->join("shaders/alphamask.frag.glsl"));
 	auto alphamask_frag = new shader::Shader(GL_FRAGMENT_SHADER, alphamask_frag_code);
-	delete[] alphamask_frag_code;
-
 
 
 	// create program for rendering simple textures
@@ -254,7 +243,7 @@ void GameMain::on_gamedata_loaded(std::vector<gamedata::empiresdat> &gamedata) {
 		// We check in sounds_x1.drs folder first in case we need to override
 		for (const char *sound_dir : {"sounds_x1.drs", "sounds.drs"}) {
 			snd_file_location.reset(util::format("Data/%s/%d.opus", sound_dir, resource_id));
-			if (util::file_size(asset_dir.join(snd_file_location.get())) > 0) {
+			if (util::file_exists(asset_dir.join(snd_file_location.get()))) {
 				return std::move(std::string(snd_file_location.get()));
 			}
 		}

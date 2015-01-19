@@ -1,10 +1,9 @@
-// Copyright 2013-2014 the openage authors. See copying.md for legal info.
+// Copyright 2013-2015 the openage authors. See copying.md for legal info.
 
 #include "shader.h"
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
 #include "../log.h"
 #include "../util/error.h"
@@ -27,15 +26,17 @@ const char *type_to_string(GLenum type) {
 	}
 }
 
-Shader::Shader(GLenum type, const char *source) {
+Shader::Shader(GLenum type, const std::vector<char> &source) {
 	//create shader
 	this->id = glCreateShader(type);
 
 	//store type
 	this->type = type;
 
+	GLint source_size = static_cast<GLint>(source.size());
+	const char *source_ptr = &source[0];
 	//load shader source
-	glShaderSource(this->id, 1, &source, NULL);
+	glShaderSource(this->id, 1, &source_ptr, &source_size);
 
 	//compile shader source
 	glCompileShader(this->id);
