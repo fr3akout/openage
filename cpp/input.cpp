@@ -5,7 +5,6 @@
 #include <stdint.h>
 
 #include "engine.h"
-#include "callbacks.h"
 #include "util/timer.h"
 
 namespace openage {

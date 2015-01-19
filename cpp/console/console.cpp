@@ -3,7 +3,6 @@
 #include "console.h"
 
 #include "draw.h"
-#include "../callbacks.h"
 #include "../log.h"
 #include "../util/error.h"
 #include "../util/strings.h"
