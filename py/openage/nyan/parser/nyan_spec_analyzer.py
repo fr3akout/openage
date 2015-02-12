@@ -80,14 +80,8 @@ class NyanSpecAnalyzer:
                 if attr.is_set:
                     error_msg = "Type 'set(%s)' must not have default value"
                 else:
-<<<<<<< HEAD:py/openage/nyan/nyan_spec_analyzer.py
-                    error_message = "Type '%s' must not have default value"
-                self.error(error_message % attr.atype.content,
-                           attr.default_value)
-=======
                     error_msg = "Type '%s' must not have default value"
                 self.error(error_msg % attr.atype.content, attr.default_value)
->>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_analyzer.py
 
     def is_primitive_type(self, type_name):
         """
@@ -113,13 +107,8 @@ class NyanSpecAnalyzer:
         elif attr_type.content == "string":
             if attr_value.ttype == Token.Type.STRING:
                 return
-<<<<<<< HEAD:py/openage/nyan/nyan_spec_analyzer.py
-        self.error("'%s' is no valid literal for primitive type '%s'"
-                   % (attr_value.content, attr_type.content), attr_value)
-=======
         self.error("'%s' is no valid literal for primitive type '%s'" %
                    (attr_value.content, attr_type.content), attr_value)
->>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_analyzer.py
 
     def error(self, message, token):
         """

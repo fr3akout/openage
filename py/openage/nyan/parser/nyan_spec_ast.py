@@ -1,7 +1,6 @@
 # Copyright 2014-2015 the openage authors. See copying.md for legal info.
 
 
-
 class NyanSpecAST:
     """
     An AST of a nyan spec.
@@ -17,13 +16,9 @@ class NyanSpecAST:
 
 
 class NyanSpecType:
-<<<<<<< HEAD:py/openage/nyan/nyan_spec_ast.py
-
-=======
     """
     Node for a nyan type within an AST.
     """
->>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_ast.py
     def __init__(self, name):
         self.name = name
         self.attributes = dict()

@@ -51,11 +51,7 @@ class NyanSpecParser:
         type_name = self.skip_token()
         self.current_type = NyanSpecType(type_name)
         if type_name.content in self.ast.types:
-<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
-            self.error("Duplicated definition of type '%s'" %
-=======
             self.error("Duplicated declaration of type '%s'" %
->>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
                        type_name.content, type_name)
         else:
             self.ast.types[type_name.content] = self.current_type
@@ -65,12 +61,9 @@ class NyanSpecParser:
         self.expect_token(Token.Type.RBRACE, "','", "'}'")
 
     def parse_type_body(self):
-<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
-=======
         """
         Parses the body of a nyan type.
         """
->>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
         got_comma = self.parse_type_attributes()
         if not got_comma:
             return
@@ -98,16 +91,9 @@ class NyanSpecParser:
             new_attr = NyanSpecAttribute(attr_name)
             if attr_name.content in self.current_type.attributes:
                 self.error(
-<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
-                    "Duplicated definition of attribute '%s' in type '%s'"
-                    % (attr_name.content, self.current_type.name.content),
-                    attr_name
-                )
-=======
                         "Duplicated declaration of attribute '%s' in type '%s'"
                         % (attr_name.content, self.current_type.name.content),
                         attr_name)
->>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
             else:
                 self.current_type.attributes[attr_name.content] = new_attr
 
@@ -159,11 +145,7 @@ class NyanSpecParser:
             delta_type = self.expect_token(Token.Type.IDENTIFIER, "delta type")
             new_delta = NyanSpecDelta(delta_type)
             if delta_type.content in self.current_type.deltas:
-<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
-                self.error("Duplicated definition of delta '%s' in "
-=======
                 self.error("Duplicated declaration of delta '%s' in "
->>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
                            "type '%s'" % (delta_type.content,
                                           self.current_type.content),
                            delta_type)
@@ -192,11 +174,7 @@ class NyanSpecParser:
         """
         self.error("Expected %s, got '%s'" %
                    (self.build_expectations_string(*expectations),
-<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
-                    self.token.content), self.token, True)
-=======
                     self.token.content), self.token, critical=True)
->>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
 
     def next_token(self):
         """
