@@ -1,4 +1,4 @@
-# Copyright 2014-2014 the openage authors. See copying.md for legal info.
+# Copyright 2014-2015 the openage authors. See copying.md for legal info.
 
 from .nyan_spec_ast import *
 from .parser_exception import ParserException
@@ -6,18 +6,38 @@ from .token import Token
 
 
 class NyanSpecParser:
+    """
+    A nyan spec parser converts a list of tokens into a corresponding AST
+    representing a nyan spec.
+    """
+
     def __init__(self, tokens):
+        """
+        Creates a new nyan spec parser for the given input tokens.
+        """
         self.index = 0
         self.tokens = tokens
         self.token = self.tokens[self.index]
         self.errors = []
 
     def parse(self):
+        """
+        Parses the input tokens and returns a tuple consisting of the resulting
+        AST and a list of errors that occured during parsing.
+        """
         self.ast = NyanSpecAST()
-        self.parse_spec()
+        try:
+            self.parse_spec()
+        except ParserException as e:
+            # a critical exception occured, so append it to the error list and
+            # immediately abort parsing
+            self.errors.append(e)
         return self.ast, self.errors
 
     def parse_spec(self):
+        """
+        Parses a nyan spec.
+        """
         while self.token.ttype != Token.Type.END:
             if self.is_token(Token.Type.IDENTIFIER):
                 self.parse_type_decl()
@@ -25,10 +45,17 @@ class NyanSpecParser:
                 self.expected("type declaration")
 
     def parse_type_decl(self):
+        """
+        Parses a nyan type declaration.
+        """
         type_name = self.skip_token()
         self.current_type = NyanSpecType(type_name)
         if type_name.content in self.ast.types:
+<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
             self.error("Duplicated definition of type '%s'" %
+=======
+            self.error("Duplicated declaration of type '%s'" %
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
                        type_name.content, type_name)
         else:
             self.ast.types[type_name.content] = self.current_type
@@ -38,6 +65,12 @@ class NyanSpecParser:
         self.expect_token(Token.Type.RBRACE, "','", "'}'")
 
     def parse_type_body(self):
+<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
+=======
+        """
+        Parses the body of a nyan type.
+        """
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
         got_comma = self.parse_type_attributes()
         if not got_comma:
             return
@@ -52,6 +85,9 @@ class NyanSpecParser:
             self.parse_type_deltas()
 
     def parse_type_attributes(self):
+        """
+        Parses attribute declarations within a nyan type.
+        """
         got_comma = True
         while got_comma:
             if not self.is_token(Token.Type.IDENTIFIER):
@@ -62,10 +98,16 @@ class NyanSpecParser:
             new_attr = NyanSpecAttribute(attr_name)
             if attr_name.content in self.current_type.attributes:
                 self.error(
+<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
                     "Duplicated definition of attribute '%s' in type '%s'"
                     % (attr_name.content, self.current_type.name.content),
                     attr_name
                 )
+=======
+                        "Duplicated declaration of attribute '%s' in type '%s'"
+                        % (attr_name.content, self.current_type.name.content),
+                        attr_name)
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
             else:
                 self.current_type.attributes[attr_name.content] = new_attr
 
@@ -80,7 +122,8 @@ class NyanSpecParser:
             if attr_type.content == "set":
                 # parse set type
                 self.expect_token(Token.Type.LPAREN, "'('")
-                new_attr.atype = self.expect_token(Token.Type.IDENTIFIER, "set type")
+                new_attr.atype = self.expect_token(Token.Type.IDENTIFIER,
+                                                   "set type")
                 self.expect_token(Token.Type.RPAREN, "')'")
                 new_attr.is_set = True
 
@@ -93,6 +136,9 @@ class NyanSpecParser:
         return got_comma
 
     def parse_default_value(self):
+        """
+        Parses the default value of an attribute.
+        """
         if self.is_token(Token.Type.INTEGER) or\
                 self.is_token(Token.Type.FLOAT) or\
                 self.is_token(Token.Type.STRING) or\
@@ -104,13 +150,20 @@ class NyanSpecParser:
             self.expected("default value")
 
     def parse_type_deltas(self):
+        """
+        Parses type runtime delta declarations.
+        """
         got_comma = True
         while got_comma:
             self.expect_token(Token.Type.CIRCUM, "'^'")
             delta_type = self.expect_token(Token.Type.IDENTIFIER, "delta type")
             new_delta = NyanSpecDelta(delta_type)
             if delta_type.content in self.current_type.deltas:
+<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
                 self.error("Duplicated definition of delta '%s' in "
+=======
+                self.error("Duplicated declaration of delta '%s' in "
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
                            "type '%s'" % (delta_type.content,
                                           self.current_type.content),
                            delta_type)
@@ -120,6 +173,10 @@ class NyanSpecParser:
             got_comma = self.accept_token(Token.Type.COMMA)
 
     def build_expectations_string(self, *expectations):
+        """
+        Builds a string representing the given expectations. Those are joined
+        with commata/or.
+        """
         length = len(expectations)
         strings = list(map(str, expectations))
         result = ""
@@ -135,7 +192,11 @@ class NyanSpecParser:
         """
         self.error("Expected %s, got '%s'" %
                    (self.build_expectations_string(*expectations),
+<<<<<<< HEAD:py/openage/nyan/nyan_spec_parser.py
                     self.token.content), self.token, True)
+=======
+                    self.token.content), self.token, critical=True)
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_parser.py
 
     def next_token(self):
         """
@@ -182,7 +243,12 @@ class NyanSpecParser:
         self.next_token()
         return token
 
-    def error(self, message, token, critical=False):
+    def error(self, message, token, *, critical=False):
+        """
+        Signals that an error with the given message occured while parsing the
+        given token. If critical is set, a parser exception will be raised
+        directly, otherwise it will be appended to the internal error list.
+        """
         exception = ParserException(message, token)
         if critical:
             raise exception

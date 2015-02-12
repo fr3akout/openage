@@ -1,10 +1,12 @@
-# Copyright 2014-2014 the openage authors. See copying.md for legal info.
+# Copyright 2014-2015 the openage authors. See copying.md for legal info.
 
 from .token import Token
-from .util import Enum
+from openage.util import Enum
+
 
 
 class Tokenizer:
+<<<<<<< HEAD:py/openage/nyan/tokenizer.py
     State = Enum(
         name="State",
         values=[
@@ -23,8 +25,35 @@ class Tokenizer:
             "FINISHED"
         ]
     )
+=======
+    """
+    A tokenizer creates a list of tokens from a nyan specification file.
+    """
+
+    # All possible states of the tokenizer's internal state machine.
+    State = Enum(name="State",
+                 values=[
+                     "START",
+                     "COMMENT",
+                     "DOT",
+                     "DOT_DOUBLE",
+                     "IDENTIFIER",
+                     "ZERO",
+                     "INTEGER",
+                     "FLOAT",
+                     "PLUS",
+                     "MINUS",
+                     "STRING",
+                     "STRING_RAW",
+                     "FINISHED"
+                 ])
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/tokenizer.py
 
     def __init__(self, input_data):
+        """
+        Creates a new tokenizer for the given input data. input_data is the
+        string representation of a nyan specification file.
+        """
         self.input_data = input_data
 
         self.state = Tokenizer.State.START
@@ -41,6 +70,9 @@ class Tokenizer:
         self.tokens = []
 
     def tokenize(self):
+        """
+        Tokenizes the input data and returns a list of tokens.
+        """
         self.tokens = []
         self.index = 0
         input_length = len(self.input_data)
@@ -61,19 +93,39 @@ class Tokenizer:
             self.unexpected()
         else:
             self.tokens.append(Token(Token.Type.END, '', self.line,
+<<<<<<< HEAD:py/openage/nyan/tokenizer.py
                                      self.offset))
+=======
+                               self.offset))
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/tokenizer.py
         return self.tokens
 
     def is_identifier_begin(self, c):
+        """
+        Returns whether the given character is allowed at the beginning of
+        identifiers.
+        """
         return c.isalpha() or c == '_'
 
     def is_identifier(self, c):
+        """
+        Returns whether the given character is allowed within identifiers.
+        """
         return c.isalnum() or c == '_'
 
     def is_separator(self, c):
+        """
+        Returns whether the given character is a valid separator. A separator
+        is a single character that can always be directly converted to a token.
+        """
         return c in "^:,()[]{}="
 
     def process(self, c):
+        """
+        Makes a transition of the internal state machine for the given input
+        character.
+        """
+
         if self.state == Tokenizer.State.START:
             if c == '#':
                 self.state = Tokenizer.State.COMMENT
@@ -88,10 +140,10 @@ class Tokenizer:
                 self.begin_token()
                 self.state = Tokenizer.State.IDENTIFIER
             elif c == '+':
-                begin_token()
+                self.begin_token()
                 self.state = Tokenizer.State.PLUS
             elif c == '-':
-                begin_token()
+                self.begin_token()
                 self.state = Tokenizer.State.MINUS
             elif c == '0':
                 self.begin_token()
@@ -204,6 +256,14 @@ class Tokenizer:
             assert "Invalid Tokenizer state"
 
     def begin_token(self, use_current=True):
+<<<<<<< HEAD:py/openage/nyan/tokenizer.py
+=======
+        """
+        Tells the tokenizer to begin a new token at the currently processed
+        character. use_current specifies, whether the current character is part
+        of the token's content.
+        """
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/tokenizer.py
         self.token_begin = self.index
         self.token_offset = self.offset
         self.token_length = 1
@@ -216,9 +276,14 @@ class Tokenizer:
         self.token_line = self.line
 
     def continue_token(self):
+        """
+        Tells the tokenizer to append the currently processed character to the
+        token.
+        """
         self.token_length += 1
 
     def finish_token(self, ttype, add_current=True):
+<<<<<<< HEAD:py/openage/nyan/tokenizer.py
         if add_current:
             self.token_length += 1
         token_end = self.token_begin + self.token_length
@@ -227,27 +292,65 @@ class Tokenizer:
             self.input_data[self.token_begin:token_end], self.token_line,
             self.token_offset,
         ))
+=======
+        """
+        Tells the tokenizer to finish the current token and add it to the
+        result token list. The token's type is set to the specified one.
+        add_current specifies, whether the currently processes character is
+        part of the finished token.
+        """
+        if add_current:
+            self.token_length += 1
+        token_end = self.token_begin + self.token_length
+        self.tokens.append(
+                Token(ttype, self.input_data[self.token_begin:token_end],
+                      self.token_line, self.token_offset))
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/tokenizer.py
         self.token_begin = self.index
         if add_current:
             self.token_begin += 1
 
     def add_token(self, ttype):
+<<<<<<< HEAD:py/openage/nyan/tokenizer.py
         self.tokens.append(Token(
             ttype,
             self.input_data[self.index],
             self.line,
             self.offset,
         ))
+=======
+        """
+        Tells the tokenizer to add a token with the given type and the
+        currently processes character as content.
+        """
+        self.tokens.append(Token(ttype, self.input_data[self.index], self.line,
+                                 self.offset))
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/tokenizer.py
 
     def step_back(self):
+        """
+        Tells the tokenizer to process the currently processed character again
+        in the START state.
+        """
         if not self.input_data[self.index].isspace():
             self.offset -= 1
             self.index -= 1
         self.state = Tokenizer.State.START
 
     def unexpected(self):
+<<<<<<< HEAD:py/openage/nyan/tokenizer.py
         self.tokens.append(Token(Token.Type.FAIL,
                                  self.input_data[self.token_begin:self.index],
                                  self.token_line,
                                  self.token_offset))
+=======
+        """
+        Tells the tokenizer to append a FAIL token and change its state to
+        FINISHED.
+        """
+        self.tokens.append(
+                Token(Token.Type.FAIL,
+                      self.input_data[self.token_begin:self.index],
+                      self.token_line, self.token_offset))
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/tokenizer.py
         self.state = Tokenizer.State.FINISHED

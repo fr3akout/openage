@@ -1,9 +1,13 @@
-# Copyright 2014-2014 the openage authors. See copying.md for legal info.
+# Copyright 2014-2015 the openage authors. See copying.md for legal info.
+
 
 
 class NyanSpecAST:
+    """
+    An AST of a nyan spec.
+    """
     def __init__(self):
-        self.types = {}
+        self.types = dict()
 
     def __str__(self):
         result = ""
@@ -13,12 +17,18 @@ class NyanSpecAST:
 
 
 class NyanSpecType:
+<<<<<<< HEAD:py/openage/nyan/nyan_spec_ast.py
 
+=======
+    """
+    Node for a nyan type within an AST.
+    """
+>>>>>>> 882668a... nyan: added parser documentation and moved parser in own python module:py/openage/nyan/parser/nyan_spec_ast.py
     def __init__(self, name):
         self.name = name
-        self.attributes = {}
+        self.attributes = dict()
         self.dynamic_attributes = False
-        self.deltas = {}
+        self.deltas = dict()
 
     def __str__(self):
         result = self.name.content + " {\n"
@@ -33,6 +43,9 @@ class NyanSpecType:
 
 
 class NyanSpecAttribute:
+    """
+    Node for a nyan attribute within an AST.
+    """
     def __init__(self, name):
         self.name = name
         self.is_set = False
@@ -51,6 +64,9 @@ class NyanSpecAttribute:
 
 
 class NyanSpecDelta:
+    """
+    Node for a nyan runtime delta definition within an AST.
+    """
     def __init__(self, delta_type):
         self.delta_type = delta_type
 
