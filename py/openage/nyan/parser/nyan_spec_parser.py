@@ -91,9 +91,9 @@ class NyanSpecParser:
             new_attr = NyanSpecAttribute(attr_name)
             if attr_name.content in self.current_type.attributes:
                 self.error(
-                        "Duplicated declaration of attribute '%s' in type '%s'"
-                        % (attr_name.content, self.current_type.name.content),
-                        attr_name)
+                    "Duplicated declaration of attribute '%s' in type '%s'"
+                    % (attr_name.content, self.current_type.name.content),
+                    attr_name)
             else:
                 self.current_type.attributes[attr_name.content] = new_attr
 

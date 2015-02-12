@@ -264,8 +264,8 @@ class Tokenizer:
             self.token_length += 1
         token_end = self.token_begin + self.token_length
         self.tokens.append(
-                Token(ttype, self.input_data[self.token_begin:token_end],
-                      self.token_line, self.token_offset))
+            Token(ttype, self.input_data[self.token_begin:token_end],
+                  self.token_line, self.token_offset))
         self.token_begin = self.index
         if add_current:
             self.token_begin += 1
@@ -294,7 +294,7 @@ class Tokenizer:
         FINISHED.
         """
         self.tokens.append(
-                Token(Token.Type.FAIL,
-                      self.input_data[self.token_begin:self.index],
-                      self.token_line, self.token_offset))
+            Token(Token.Type.FAIL,
+                  self.input_data[self.token_begin:self.index],
+                  self.token_line, self.token_offset))
         self.state = Tokenizer.State.FINISHED
